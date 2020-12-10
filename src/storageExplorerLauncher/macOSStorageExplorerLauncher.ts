@@ -63,9 +63,7 @@ export class MacOSStorageExplorerLauncher implements IStorageExplorerLauncher {
             url = `${url}&resourcename=${resourceName}`;
         }
 
-        await this.launchStorageExplorer([
-            url
-        ]);
+        vscode.env.openExternal(vscode.Uri.parse(url));
     }
 
     private static async downloadStorageExplorer(): Promise<void> {
