@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.md in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { platform } from 'os';
+import { platform } from "os";
 import { window } from "vscode";
 import { IActionContext, UserCancelledError } from "vscode-azureextensionui";
 import { ResourceType } from "../storageExplorerLauncher/ResourceType";
@@ -11,9 +11,11 @@ import { storageExplorerLauncher } from "../storageExplorerLauncher/storageExplo
 import { localize } from "./localize";
 
 export async function askOpenInStorageExplorer(context: IActionContext, errorMessage: string, resourceId: string, subscriptionId: string, resourceType: ResourceType, resourceName: string): Promise<void> {
-    // Don't provide the option to open in Storage Explorer on Linux.
-    const message: string = platform() === 'linux' ? '' : localize("openInSE", "Open resource in Storage Explorer");
-    window.showErrorMessage(errorMessage, message).then(async result => {
+    const message: string = localize("openInSE", "Open resource in Storage Explorer");
+
+    // Don't provide the action to open in Storage Explorer on Linux.
+    const items: string[] = platform() === 'linux' ? [] : [message];
+    window.showErrorMessage(errorMessage, ...items).then(async result => {
         if (result === message) {
             context.telemetry.properties.openInStorageExplorer = 'true';
             await storageExplorerLauncher.openResource(resourceId, subscriptionId, resourceType, resourceName);
